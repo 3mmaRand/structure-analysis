@@ -5,7 +5,7 @@ author: "Emma Rand"
 engine: knitr
 ---
 
-# Based on the [Antibody Mimetics Workshop](https://colab.research.google.com/drive/187wIfCZTIbU7pgdrU1GDXxE_ihxRlmu3) by Michael Plevin & Jon Agirre
+# Based on the [Antibody Mimetics Workshop](https://colab.research.google.com/drive/1BOmOi9e_yHeFXucBnYwUCJmFfZLBRFKf) by Michael Plevin & Jon Agirre
 
 ## Understanding this document in RStudio
 
