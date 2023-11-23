@@ -1,0 +1,246 @@
+---
+title: "Workshop: programmatic protein structure analysis"
+subtitle: "BIO00088H - Group Research Project"
+author: "Emma Rand"
+engine: knitr
+---
+
+
+# Based on the [Antibody Mimetics Workshop](https://colab.research.google.com/drive/187wIfCZTIbU7pgdrU1GDXxE_ihxRlmu3) by Michael Plevin & Jon Agirre
+
+## Understanding this document in RStudio
+
+You are using RStudio which is an integrated development environment (IDE) initially developed for R. It can now be used for many other languages including Python. You might find it useful for Python because you are already familiar with. It is also a very good way to create Quarto documents with code chunks in more than one language. This document is an example of that.
+
+Some set is is required which is covered
+
+For example, this is an R code chunk. You can also run it by clicking on the green arrow in the top right of the chunk. Or do  `Cmd+Return` on a Mac or `Ctrl+Return` on Windows.
+
+
+```{r}
+getwd()
+```
+Notice:
+-   prompt in the console is `>` as you are used to in R.
+-   The Environment Pane is showing an R environment
+
+This is a Python code chunk. You can also run it by clicking on the green arrow in the top right of the chunk. Or do  `Cmd+Return` on a Mac or `Ctrl+Return` on Windows.
+
+```{python}
+import os
+os.getcwd()
+```
+
+Notice:
+-   the R command `reticulate::repl_python()` was sent to the console to start Python
+-   prompt in the console is `>>>`. This is the Python prompt. If you try typing R code like `getwd()` in the console at the `>>>` prompt you will get an error.
+-   The Environment Pane is showing a Python environment containing an 'interface' to the r environment. This is the `r` object. 
+-   If you type `r.getwd()` in the console at the Python prompt you don't get an error. You get the same result as you did in the R code chunk above
+
+
+You can access R commands and R objects from you Python environment using the `r` object. For example, you can access the R vector object `an_r_obj` from Python using `r.an_r_obj`. 
+
+Create a vector in R called `an_r_obj`:
+```{r}
+an_r_obj <- c(1, 2, 3)
+str(an_r_obj)
+```
+
+Try to access it from Python:
+```{python}
+#| error: true
+an_r_obj
+
+```
+
+
+You get an error because Python does not know about the R object `an_r_obj`. But you *can* access it using the `r` object:
+
+
+```{python}
+r.an_r_obj
+type(r.an_r_obj)
+
+```
+You can 'copy' it to your python environment if you want:
+
+```{python}
+acopy = r.an_r_obj
+type(acopy)
+```
+
+`acopy` is in your Python environment now:
+
+
+Magic!
+
+Datatypes differ between the languages. Reticulate converts some automatically - for example R vectors to Python lists. For some other datatypes you must explicitly convert. 
+
+
+You can also access Python objects from R using the `py` object. For example, you can access the Python list object `a_python_obj` from R using `py$a_python_obj`. However you do need to have loaded the `reticulate` package in R first.
+
+
+```{python}
+a_python_obj = [4, 5, 6]
+```
+
+```{r}
+library(reticulate)
+```
+
+
+```{r}
+py$a_python_obj
+```
+
+-   You access objects in the Python environment from R in an R-like way using `py$`
+
+-   You access objects in the R environment from Python in a Python-like way using `r.`
+
+## Getting started
+
+This RStudio Project already has a folder containing the 4INS.pdb file. I have called the folder `pdb_files`. Jon called his folder `download`. When you are doing your own work in RStudio you can make folders by:
+
+-   clicking on the New Folder button in the Files Pane OR
+-   typing `mkdir pdb_files` in the *Terminal* OR
+-   
+  
+You can download a pdb by typing `curl https://files.rcsb.org/download/4INS.pdb -o pdb_files/4INS.pdb` in the *Terminal*
+
+I have used `curl` rather than `wget` because `wget` because most macOS and Windows do not come with `wget` by default. They mostly do have the very similar `curl`. Use is very similar but notice it is a lowercase `-o` for output rather than a capital `-O`. 
+  
+I would tend not to have this "house-keeping" in my reproducible document. I would, however, explain the directory structure and where the data files came from in the README.md file.
+
+## Analysis code
+
+Most of the text explanation here is taken directly from Jon and Michael's document. 
+
+
+```{python}
+# Import the `gemmi` package
+import gemmi
+```
+
+
+4INS is a 1.5 angstroems structure of insulin. We have seen structures of insulin in our first workshop. 
+
+You can open the file to view it by clicking on it in the Files Pane.
+
+Here are a few basic but interesting questions about a protein structure we can answer using Python programming:
+
+-   What is the molecular weight of the protein?
+-   What is the modelled sequence? We know the UniPro sequence, but is it the same as the one in the crystal?
+-   What is the average B-factor per-residue? Would be neat to separate by main-chain and side-chain atoms.
+-   Does the protein have any disulphide bonds?
+
+
+Import the structure file:
+```{python}
+filename = "pdb_files/4INS.pdb" 
+structure_file = gemmi.read_structure ( filename ) # remember gemmi.whatever?
+```
+
+
+
+
+
+```{python}
+
+model = structure_file[0] # there can be more than one model per structure file!
+                          # in computer science 0 is the first index, so we are
+                          # getting the first (and only) model in the file
+
+```
+
+all the attributes and methods
+```{python}
+dir(model)
+```
+You can also click on it
+
+
+```{python}
+print ( "This protein weights", model.calculate_mass(), "Da" )
+```
+
+```{python}
+print ( "This protein weights %.2f Da" % model.calculate_mass() )
+```
+
+
+```{python}
+import numpy as np
+```
+
+
+```{python}
+print(model[0])
+```
+
+```{python}
+print(model[1])
+```
+
+
+```{python}
+print(model[2])
+```
+
+```{python}
+print(model[3])
+```
+```{python}
+for polymer in model :
+  print (polymer)
+```
+```{python}
+for polymer in model :
+  print (polymer)
+  for steve in polymer :
+    print(steve)
+
+```
+
+```{python}
+for polymer in model :
+  print (polymer)
+  for steve in polymer :
+    print(steve.name)
+```
+
+```{python}
+for polymer in model :
+  print (polymer)
+  for steve in polymer :
+    print(gemmi.find_tabulated_residue(steve.name).one_letter_code.upper())
+```
+
+
+```{python}
+for polymer in model :
+  sequence = ""
+  print (polymer)
+  for steve in polymer :
+    sequence += gemmi.find_tabulated_residue(steve.name).one_letter_code.upper()
+  print ("Polymer %s: %s" % (polymer.name,sequence))
+```
+
+```{python}
+import statistics        # we will need to do stats, so we import the module
+
+aminoacid_bfactors = [ ] # these are lists where we are going to store the
+rest_bfactors      = [ ] # individual B-factors
+
+for chain in model :
+  for monomer in chain : # we'll call it monomer this time (name doesn't matter)
+    for atom in monomer :
+      if gemmi.find_tabulated_residue(monomer.name).is_amino_acid() :
+        aminoacid_bfactors.append ( atom.b_iso )
+      else :
+        rest_bfactors.append ( atom.b_iso )
+
+print ( "Protein part mean(stdev) : %.2f (%.2f)" % \
+      ( statistics.mean ( aminoacid_bfactors ), statistics.stdev ( aminoacid_bfactors ) ))
+print ( "Rest of atoms mean(stdev): %.2f (%.2f)" % \
+      ( statistics.mean ( rest_bfactors ), statistics.stdev ( rest_bfactors ) ))
+```

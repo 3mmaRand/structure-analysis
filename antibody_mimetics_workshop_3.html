@@ -1,0 +1,1875 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.269">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Workshop: programmatic protein structure analysis</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="antibody_mimetics_workshop_3_files/libs/clipboard/clipboard.min.js"></script>
+<script src="antibody_mimetics_workshop_3_files/libs/quarto-html/quarto.js"></script>
+<script src="antibody_mimetics_workshop_3_files/libs/quarto-html/popper.min.js"></script>
+<script src="antibody_mimetics_workshop_3_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="antibody_mimetics_workshop_3_files/libs/quarto-html/anchor.min.js"></script>
+<link href="antibody_mimetics_workshop_3_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="antibody_mimetics_workshop_3_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="antibody_mimetics_workshop_3_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="antibody_mimetics_workshop_3_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="antibody_mimetics_workshop_3_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Workshop: programmatic protein structure analysis</h1>
+<p class="subtitle lead">BIO00088H - Group Research Project</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="based-on-the-antibody-mimetics-workshop-by-michael-plevin-jon-agirre" class="level1">
+<h1>Based on the <a href="https://colab.research.google.com/drive/187wIfCZTIbU7pgdrU1GDXxE_ihxRlmu3">Antibody Mimetics Workshop</a> by Michael Plevin &amp; Jon Agirre</h1>
+<section id="understanding-this-document-in-rstudio" class="level2">
+<h2 class="anchored" data-anchor-id="understanding-this-document-in-rstudio">Understanding this document in RStudio</h2>
+<p>You are using RStudio which is an integrated development environment (IDE) initially developed for R. It can now be used for many other languages including Python. You might find it useful because you have some familiar with with RStudio. It is also a very good way to create Quarto documents with code chunks in more than one language.</p>
+<p>For example, this is an R code chunk. You can also run it by clicking on the green arrow in the top right of the chunk. Or do <code>Cmd+Return</code> on a Mac or <code>Ctrl+Return</code> on Windows.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">getwd</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "C:/Users/er13/OneDrive - University of York/Desktop/Desktop/undergrad-teaching-york/BIO00088H/structure-analysis"</code></pre>
+</div>
+</div>
+<p>Notice: - prompt in the console is <code>&gt;</code> as you are used to in R. - The Environment Pane is showing an R environment</p>
+<p>This is a Python code chunk. You can also run it by clicking on the green arrow in the top right of the chunk. Or do <code>Cmd+Return</code> on a Mac or <code>Ctrl+Return</code> on Windows.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>os.getcwd()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'C:\\Users\\er13\\OneDrive - University of York\\Desktop\\Desktop\\undergrad-teaching-york\\BIO00088H\\structure-analysis'</code></pre>
+</div>
+</div>
+<p>Notice: - the R command <code>reticulate::repl_python()</code> was sent to the console to start Python - prompt in the console is <code>&gt;&gt;&gt;</code>. This is the Python prompt. If you try typing R code like <code>getwd()</code> in the console at the <code>&gt;&gt;&gt;</code> prompt you will get an error. - The Environment Pane is showing a Python environment containing an ‘interface’ to the r environment. This is the <code>r</code> object. - If you type <code>r.getwd()</code> in the console at the Python prompt you don’t get an error. You get the same result as you did in the R code chunk above</p>
+<p>You can access R commands and R objects from you Python environment using the <code>r</code> object. For example, you can access the R vector object <code>an_r_obj</code> from Python using <code>r.an_r_obj</code>.</p>
+<p>Create a vector in R called <code>an_r_obj</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>an_r_obj <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(an_r_obj)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> num [1:3] 1 2 3</code></pre>
+</div>
+</div>
+<p>Try to access it from Python:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>an_r_obj</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-error">
+<pre><code>name 'an_r_obj' is not defined</code></pre>
+</div>
+</div>
+<p>You get an error because Python does not know about the R object <code>an_r_obj</code>. But you <em>can</em> access it using the <code>r</code> object:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>r.an_r_obj</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1.0, 2.0, 3.0]</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="bu">type</span>(r.an_r_obj)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class 'list'&gt;</code></pre>
+</div>
+</div>
+<p>You can ‘copy’ it to your python environment if you want:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>acopy <span class="op">=</span> r.an_r_obj</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="bu">type</span>(acopy)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class 'list'&gt;</code></pre>
+</div>
+</div>
+<p><code>acopy</code> is in your Python environment now:</p>
+<p>Magic!</p>
+<p>Datatypes differ between the languages. Reticulate converts some automatically - for example R vectors to Python lists. For some other datatypes you must explicitly convert.</p>
+<p>You can also access Python objects from R using the <code>py</code> object. For example, you can access the Python list object <code>a_python_obj</code> from R using <code>py$a_python_obj</code>. However you do need to have loaded the <code>reticulate</code> package in R first.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>a_python_obj <span class="op">=</span> [<span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reticulate)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>py<span class="sc">$</span>a_python_obj</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 4 5 6</code></pre>
+</div>
+</div>
+</section>
+<section id="getting-started" class="level2">
+<h2 class="anchored" data-anchor-id="getting-started">Getting started</h2>
+<p>This RStudio Project already has a folder containing the 4INS.pdb file. I have called the folder <code>pdb_files</code>. Jon called his folder <code>download</code>. When you are doing your own work you can make folders by - clicking on the New Folder button in the Files Pane OR - typing <code>mkdir pdb_files</code> in the <em>Terminal</em></p>
+<p>You can download a pdb by typing <code>curl https://files.rcsb.org/download/4INS.pdb -o pdb_files/4INS.pdb</code> in the <em>Terminal</em></p>
+<p>I have used <code>curl</code> rather than <code>wget</code> because <code>wget</code> because most macOS and Windows do not come with <code>wget</code> by default. They mostly do have the very similar <code>curl</code>. Use is very similar but notice it is a lowercase <code>-o</code> for output rather than a capital <code>-O</code>.</p>
+<p>I would tend not to have this “house-keeping” in my reproducible document. I would, however, explain the directory structure and where the data files came from in the README.md file.</p>
+</section>
+<section id="analysis-code" class="level2">
+<h2 class="anchored" data-anchor-id="analysis-code">Analysis code</h2>
+<p>Most of the text explanation here is taken directly from Jon and Michael’s document.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import the `gemmi` package</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gemmi</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>4INS is a 1.5 angstroems structure of insulin. We have seen structures of insulin in our first workshop.</p>
+<p>You can open the file to view it by clicking on it in the Files Pane.</p>
+<p>Here are a few basic but interesting questions about a protein structure we can answer using Python programming:</p>
+<ul>
+<li>What is the molecular weight of the protein?</li>
+<li>What is the modelled sequence? We know the UniPro sequence, but is it the same as the one in the crystal?</li>
+<li>What is the average B-factor per-residue? Would be neat to separate by main-chain and side-chain atoms.</li>
+<li>Does the protein have any disulphide bonds?</li>
+</ul>
+<p>Import the structure file:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>filename <span class="op">=</span> <span class="st">"pdb_files/4INS.pdb"</span> </span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>structure_file <span class="op">=</span> gemmi.read_structure ( filename ) <span class="co"># remember gemmi.whatever?</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> structure_file[<span class="dv">0</span>] <span class="co"># there can be more than one model per structure file!</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>                          <span class="co"># in computer science 0 is the first index, so we are</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>                          <span class="co"># getting the first (and only) model in the file</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>all the attributes and methods</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="bu">dir</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>['__class__', '__delattr__', '__delitem__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__getitem__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__iter__', '__le__', '__len__', '__lt__', '__module__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', 'add_chain', 'all', 'calculate_center_of_mass', 'calculate_mass', 'clone', 'count_atom_sites', 'count_hydrogen_sites', 'count_occupancies', 'find_chain', 'find_cra', 'find_last_chain', 'find_residue_group', 'get_all_residue_names', 'get_subchain', 'has_hydrogen', 'name', 'remove_alternative_conformations', 'remove_chain', 'remove_hydrogens', 'remove_ligands_and_waters', 'remove_waters', 'sole_residue', 'split_chains_by_segments', 'subchains', 'transform_pos_and_adp']</code></pre>
+</div>
+</div>
+<p>You can also click on it</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span> ( <span class="st">"This protein weights"</span>, model.calculate_mass(), <span class="st">"Da"</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>This protein weights 15332.740152545452 Da</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span> ( <span class="st">"This protein weights </span><span class="sc">%.2f</span><span class="st"> Da"</span> <span class="op">%</span> model.calculate_mass() )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>This protein weights 15332.74 Da</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model[<span class="dv">0</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;gemmi.Chain A with 52 res&gt;</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model[<span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;gemmi.Chain B with 80 res&gt;</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model[<span class="dv">2</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;gemmi.Chain C with 28 res&gt;</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model[<span class="dv">3</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;gemmi.Chain D with 294 res&gt;</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> polymer <span class="kw">in</span> model :</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span> (polymer)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;gemmi.Chain A with 52 res&gt;
+&lt;gemmi.Chain B with 80 res&gt;
+&lt;gemmi.Chain C with 28 res&gt;
+&lt;gemmi.Chain D with 294 res&gt;</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> polymer <span class="kw">in</span> model :</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span> (polymer)</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> steve <span class="kw">in</span> polymer :</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(steve)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;gemmi.Chain A with 52 res&gt;
+1(GLY)
+2(ILE)
+3(VAL)
+4(GLU)
+5(GLN)
+6(CYS)
+7(CYS)
+8(THR)
+9(SER)
+10(ILE)
+11(CYS)
+12(SER)
+13(LEU)
+14(TYR)
+15(GLN)
+16(LEU)
+17(GLU)
+18(ASN)
+19(TYR)
+20(CYS)
+21(ASN)
+101(HOH)
+102(HOH)
+103(HOH)
+104(HOH)
+105(HOH)
+106(HOH)
+107(HOH)
+108(HOH)
+109(HOH)
+110(HOH)
+111(HOH)
+112(HOH)
+113(HOH)
+114(HOH)
+115(HOH)
+116(HOH)
+117(HOH)
+118(HOH)
+119(HOH)
+120(HOH)
+121(HOH)
+122(HOH)
+123(HOH)
+124(HOH)
+125(HOH)
+126(HOH)
+127(HOH)
+128(HOH)
+129(HOH)
+130(HOH)
+131(HOH)
+&lt;gemmi.Chain B with 80 res&gt;
+1(PHE)
+2(VAL)
+3(ASN)
+4(GLN)
+5(HIS)
+6(LEU)
+7(CYS)
+8(GLY)
+9(SER)
+10(HIS)
+11(LEU)
+12(VAL)
+13(GLU)
+14(ALA)
+15(LEU)
+16(TYR)
+17(LEU)
+18(VAL)
+19(CYS)
+20(GLY)
+21(GLU)
+22(ARG)
+23(GLY)
+24(PHE)
+25(PHE)
+26(TYR)
+27(THR)
+28(PRO)
+29(LYS)
+30(ALA)
+101(ZN)
+201(HOH)
+202(HOH)
+203(HOH)
+204(HOH)
+205(HOH)
+206(HOH)
+207(HOH)
+208(HOH)
+209(HOH)
+210(HOH)
+211(HOH)
+212(HOH)
+213(HOH)
+214(HOH)
+215(HOH)
+216(HOH)
+217(HOH)
+218(HOH)
+219(HOH)
+220(HOH)
+221(HOH)
+222(HOH)
+223(HOH)
+224(HOH)
+225(HOH)
+226(HOH)
+227(HOH)
+228(HOH)
+229(HOH)
+230(HOH)
+231(HOH)
+232(HOH)
+233(HOH)
+234(HOH)
+235(HOH)
+236(HOH)
+237(HOH)
+238(HOH)
+239(HOH)
+240(HOH)
+241(HOH)
+242(HOH)
+243(HOH)
+244(HOH)
+245(HOH)
+246(HOH)
+247(HOH)
+248(HOH)
+249(HOH)
+&lt;gemmi.Chain C with 28 res&gt;
+1(GLY)
+2(ILE)
+3(VAL)
+4(GLU)
+5(GLN)
+6(CYS)
+7(CYS)
+8(THR)
+9(SER)
+10(ILE)
+11(CYS)
+12(SER)
+13(LEU)
+14(TYR)
+15(GLN)
+16(LEU)
+17(GLU)
+18(ASN)
+19(TYR)
+20(CYS)
+21(ASN)
+101(HOH)
+102(HOH)
+103(HOH)
+104(HOH)
+105(HOH)
+106(HOH)
+107(HOH)
+&lt;gemmi.Chain D with 294 res&gt;
+1(PHE)
+2(VAL)
+3(ASN)
+4(GLN)
+5(HIS)
+6(LEU)
+7(CYS)
+8(GLY)
+9(SER)
+10(HIS)
+11(LEU)
+12(VAL)
+13(GLU)
+14(ALA)
+15(LEU)
+16(TYR)
+17(LEU)
+18(VAL)
+19(CYS)
+20(GLY)
+21(GLU)
+22(ARG)
+23(GLY)
+24(PHE)
+25(PHE)
+26(TYR)
+27(THR)
+28(PRO)
+29(LYS)
+30(ALA)
+101(ZN)
+201(HOH)
+202(HOH)
+203(HOH)
+204(HOH)
+205(HOH)
+206(HOH)
+207(HOH)
+208(HOH)
+209(HOH)
+210(HOH)
+211(HOH)
+212(HOH)
+213(HOH)
+214(HOH)
+215(HOH)
+216(HOH)
+217(HOH)
+218(HOH)
+219(HOH)
+220(HOH)
+221(HOH)
+222(HOH)
+223(HOH)
+224(HOH)
+225(HOH)
+226(HOH)
+227(HOH)
+228(HOH)
+229(HOH)
+230(HOH)
+231(HOH)
+232(HOH)
+233(HOH)
+234(HOH)
+235(HOH)
+236(HOH)
+237(HOH)
+238(HOH)
+239(HOH)
+240(HOH)
+241(HOH)
+242(HOH)
+243(HOH)
+244(HOH)
+245(HOH)
+246(HOH)
+247(HOH)
+248(HOH)
+249(HOH)
+250(HOH)
+251(HOH)
+252(HOH)
+253(HOH)
+254(HOH)
+255(HOH)
+256(HOH)
+257(HOH)
+258(HOH)
+259(HOH)
+260(HOH)
+261(HOH)
+262(HOH)
+263(HOH)
+264(HOH)
+265(HOH)
+266(HOH)
+267(HOH)
+268(HOH)
+269(HOH)
+270(HOH)
+271(HOH)
+272(HOH)
+273(HOH)
+274(HOH)
+275(HOH)
+276(HOH)
+277(HOH)
+278(HOH)
+279(HOH)
+280(HOH)
+281(HOH)
+282(HOH)
+283(HOH)
+284(HOH)
+285(HOH)
+286(HOH)
+287(HOH)
+288(HOH)
+289(HOH)
+290(HOH)
+291(HOH)
+292(HOH)
+293(HOH)
+294(HOH)
+295(HOH)
+296(HOH)
+297(HOH)
+298(HOH)
+299(HOH)
+300(HOH)
+301(HOH)
+302(HOH)
+303(HOH)
+304(HOH)
+305(HOH)
+306(HOH)
+307(HOH)
+308(HOH)
+309(HOH)
+310(HOH)
+311(HOH)
+312(HOH)
+313(HOH)
+314(HOH)
+315(HOH)
+316(HOH)
+317(HOH)
+318(HOH)
+319(HOH)
+320(HOH)
+321(HOH)
+322(HOH)
+323(HOH)
+324(HOH)
+325(HOH)
+326(HOH)
+327(HOH)
+328(HOH)
+329(HOH)
+330(HOH)
+331(HOH)
+332(HOH)
+333(HOH)
+334(HOH)
+335(HOH)
+336(HOH)
+337(HOH)
+338(HOH)
+339(HOH)
+340(HOH)
+341(HOH)
+342(HOH)
+343(HOH)
+344(HOH)
+345(HOH)
+346(HOH)
+347(HOH)
+348(HOH)
+349(HOH)
+350(HOH)
+351(HOH)
+352(HOH)
+353(HOH)
+354(HOH)
+355(HOH)
+356(HOH)
+357(HOH)
+358(HOH)
+359(HOH)
+360(HOH)
+361(HOH)
+362(HOH)
+363(HOH)
+364(HOH)
+365(HOH)
+366(HOH)
+367(HOH)
+368(HOH)
+369(HOH)
+370(HOH)
+371(HOH)
+372(HOH)
+373(HOH)
+374(HOH)
+375(HOH)
+376(HOH)
+377(HOH)
+378(HOH)
+379(HOH)
+380(HOH)
+381(HOH)
+382(HOH)
+383(HOH)
+384(HOH)
+385(HOH)
+386(HOH)
+387(HOH)
+388(HOH)
+389(HOH)
+390(HOH)
+391(HOH)
+392(HOH)
+393(HOH)
+394(HOH)
+395(HOH)
+396(HOH)
+397(HOH)
+398(HOH)
+399(HOH)
+400(HOH)
+401(HOH)
+402(HOH)
+403(HOH)
+404(HOH)
+405(HOH)
+406(HOH)
+407(HOH)
+408(HOH)
+409(HOH)
+410(HOH)
+411(HOH)
+412(HOH)
+413(HOH)
+414(HOH)
+415(HOH)
+416(HOH)
+417(HOH)
+418(HOH)
+419(HOH)
+420(HOH)
+421(HOH)
+422(HOH)
+423(HOH)
+424(HOH)
+425(HOH)
+426(HOH)
+427(HOH)
+428(HOH)
+429(HOH)
+430(HOH)
+431(HOH)
+432(HOH)
+433(HOH)
+434(HOH)
+435(HOH)
+436(HOH)
+437(HOH)
+438(HOH)
+439(HOH)
+440(HOH)
+441(HOH)
+442(HOH)
+443(HOH)
+444(HOH)
+445(HOH)
+446(HOH)
+447(HOH)
+448(HOH)
+449(HOH)
+450(HOH)
+451(HOH)
+452(HOH)
+453(HOH)
+454(HOH)
+455(HOH)
+456(HOH)
+457(HOH)
+458(HOH)
+459(HOH)
+460(HOH)
+461(HOH)
+462(HOH)
+463(HOH)</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> polymer <span class="kw">in</span> model :</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span> (polymer)</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> steve <span class="kw">in</span> polymer :</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(steve.name)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;gemmi.Chain A with 52 res&gt;
+GLY
+ILE
+VAL
+GLU
+GLN
+CYS
+CYS
+THR
+SER
+ILE
+CYS
+SER
+LEU
+TYR
+GLN
+LEU
+GLU
+ASN
+TYR
+CYS
+ASN
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+&lt;gemmi.Chain B with 80 res&gt;
+PHE
+VAL
+ASN
+GLN
+HIS
+LEU
+CYS
+GLY
+SER
+HIS
+LEU
+VAL
+GLU
+ALA
+LEU
+TYR
+LEU
+VAL
+CYS
+GLY
+GLU
+ARG
+GLY
+PHE
+PHE
+TYR
+THR
+PRO
+LYS
+ALA
+ZN
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+&lt;gemmi.Chain C with 28 res&gt;
+GLY
+ILE
+VAL
+GLU
+GLN
+CYS
+CYS
+THR
+SER
+ILE
+CYS
+SER
+LEU
+TYR
+GLN
+LEU
+GLU
+ASN
+TYR
+CYS
+ASN
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+&lt;gemmi.Chain D with 294 res&gt;
+PHE
+VAL
+ASN
+GLN
+HIS
+LEU
+CYS
+GLY
+SER
+HIS
+LEU
+VAL
+GLU
+ALA
+LEU
+TYR
+LEU
+VAL
+CYS
+GLY
+GLU
+ARG
+GLY
+PHE
+PHE
+TYR
+THR
+PRO
+LYS
+ALA
+ZN
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH
+HOH</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> polymer <span class="kw">in</span> model :</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span> (polymer)</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> steve <span class="kw">in</span> polymer :</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(gemmi.find_tabulated_residue(steve.name).one_letter_code.upper())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;gemmi.Chain A with 52 res&gt;
+G
+I
+V
+E
+Q
+C
+C
+T
+S
+I
+C
+S
+L
+Y
+Q
+L
+E
+N
+Y
+C
+N
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+&lt;gemmi.Chain B with 80 res&gt;
+F
+V
+N
+Q
+H
+L
+C
+G
+S
+H
+L
+V
+E
+A
+L
+Y
+L
+V
+C
+G
+E
+R
+G
+F
+F
+Y
+T
+P
+K
+A
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+&lt;gemmi.Chain C with 28 res&gt;
+G
+I
+V
+E
+Q
+C
+C
+T
+S
+I
+C
+S
+L
+Y
+Q
+L
+E
+N
+Y
+C
+N
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+&lt;gemmi.Chain D with 294 res&gt;
+F
+V
+N
+Q
+H
+L
+C
+G
+S
+H
+L
+V
+E
+A
+L
+Y
+L
+V
+C
+G
+E
+R
+G
+F
+F
+Y
+T
+P
+K
+A
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> polymer <span class="kw">in</span> model :</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  sequence <span class="op">=</span> <span class="st">""</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span> (polymer)</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> steve <span class="kw">in</span> polymer :</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>    sequence <span class="op">+=</span> gemmi.find_tabulated_residue(steve.name).one_letter_code.upper()</span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span> (<span class="st">"Polymer </span><span class="sc">%s</span><span class="st">: </span><span class="sc">%s</span><span class="st">"</span> <span class="op">%</span> (polymer.name,sequence))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;gemmi.Chain A with 52 res&gt;
+Polymer A: GIVEQCCTSICSLYQLENYCN                               
+&lt;gemmi.Chain B with 80 res&gt;
+Polymer B: FVNQHLCGSHLVEALYLVCGERGFFYTPKA                                                  
+&lt;gemmi.Chain C with 28 res&gt;
+Polymer C: GIVEQCCTSICSLYQLENYCN       
+&lt;gemmi.Chain D with 294 res&gt;
+Polymer D: FVNQHLCGSHLVEALYLVCGERGFFYTPKA                                                                                                                                                                                                                                                                        </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statistics        <span class="co"># we will need to do stats, so we import the module</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>aminoacid_bfactors <span class="op">=</span> [ ] <span class="co"># these are lists where we are going to store the</span></span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>rest_bfactors      <span class="op">=</span> [ ] <span class="co"># individual B-factors</span></span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> chain <span class="kw">in</span> model :</span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> monomer <span class="kw">in</span> chain : <span class="co"># we'll call it monomer this time (name doesn't matter)</span></span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> atom <span class="kw">in</span> monomer :</span>
+<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> gemmi.find_tabulated_residue(monomer.name).is_amino_acid() :</span>
+<span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a>        aminoacid_bfactors.append ( atom.b_iso )</span>
+<span id="cb47-11"><a href="#cb47-11" aria-hidden="true" tabindex="-1"></a>      <span class="cf">else</span> :</span>
+<span id="cb47-12"><a href="#cb47-12" aria-hidden="true" tabindex="-1"></a>        rest_bfactors.append ( atom.b_iso )</span>
+<span id="cb47-13"><a href="#cb47-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-14"><a href="#cb47-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span> ( <span class="st">"Protein part mean(stdev) : </span><span class="sc">%.2f</span><span class="st"> (</span><span class="sc">%.2f</span><span class="st">)"</span> <span class="op">%</span> <span class="op">\</span></span>
+<span id="cb47-15"><a href="#cb47-15" aria-hidden="true" tabindex="-1"></a>      ( statistics.mean ( aminoacid_bfactors ), statistics.stdev ( aminoacid_bfactors ) ))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Protein part mean(stdev) : 21.45 (12.39)</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span> ( <span class="st">"Rest of atoms mean(stdev): </span><span class="sc">%.2f</span><span class="st"> (</span><span class="sc">%.2f</span><span class="st">)"</span> <span class="op">%</span> <span class="op">\</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>      ( statistics.mean ( rest_bfactors ), statistics.stdev ( rest_bfactors ) ))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rest of atoms mean(stdev): 52.02 (16.73)</code></pre>
+</div>
+</div>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
