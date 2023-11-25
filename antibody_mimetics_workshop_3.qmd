@@ -9,13 +9,14 @@ engine: knitr
 
 ## Understanding this document in RStudio
 
-You are using RStudio which is an integrated development environment (IDE) initially developed for R. It can now be used for many other languages including Python. Some set is is required which is covered in [Structure Data Analysis for Group Project](https://3mmarand.github.io/BIO00088H-data/structure/structures.html). This in contrast to the Colab notebook which is cloud-based and does not require any set up (except installing packages)
+You are using RStudio which is an integrated development environment (IDE) initially developed for R. It can now be used for many other languages including Python. Some set up is required which is covered in [Structure Data Analysis for Group Project](https://3mmarand.github.io/BIO00088H-data/structure/structures.html). This in contrast to the Colab notebook which is cloud-based and does not require any set up (except installing packages)
 
 You might find RStudio useful for Python because you are already familiar with it. It is also a very good way to create [Quarto documents](https://3mmarand.github.io/BIO00088H-data/core/week-11/overview.html) with code chunks in more than one language. This document is an example of that.
 
 For example, this is an R code chunk. You can run it by clicking on the green arrow in the top right of the chunk. Or do `Cmd+Return` on a Mac or `Ctrl+Return` on Windows.
 
 ```{r}
+# R chunk
 getwd()
 ```
 
@@ -29,6 +30,7 @@ Notice:
 This is a Python code chunk. You can also run it by clicking on the green arrow in the top right of the chunk. Or do `Cmd+Return` on a Mac or `Ctrl+Return` on Windows.
 
 ```{python}
+# Python chunk
 import os
 os.getcwd()
 ```
@@ -48,6 +50,7 @@ This is because you can access R commands and R objects from your Python environ
 Run this code to create a vector in R called `an_r_obj`:
 
 ```{r}
+# R chunk
 an_r_obj <- c(1, 2, 3)
 str(an_r_obj)
 ```
@@ -58,6 +61,7 @@ Try to access it from Python:
 
 ```{python}
 #| error: true
+# Python chunk
 an_r_obj
 
 ```
@@ -65,6 +69,7 @@ an_r_obj
 You get an error because Python does not know about the R object `an_r_obj`. But you *can* access it using the `r` object:
 
 ```{python}
+# Python chunk
 r.an_r_obj
 type(r.an_r_obj)
 
@@ -73,6 +78,7 @@ type(r.an_r_obj)
 You can 'copy' it to your python environment if you want:
 
 ```{python}
+# Python chunk
 acopy = r.an_r_obj
 type(acopy)
 ```
@@ -86,14 +92,17 @@ Datatypes differ between the languages. Reticulate converts some automatically -
 You can also access Python objects from R using the `py` object. For example, you can access the Python list object `a_python_obj` from R using `py$a_python_obj`. However you do need to have loaded the `reticulate` package in R first.
 
 ```{python}
+# Python chunk
 a_python_obj = [4, 5, 6]
 ```
 
 ```{r}
+# R chunk
 library(reticulate)
 ```
 
 ```{r}
+# R chunk
 py$a_python_obj
 ```
 
@@ -119,9 +128,10 @@ I would tend not to have this "house-keeping" (making folders, downloading throu
 
 ## Analysis code
 
-Most of the text explanation here is taken directly from Jon and Michael's document.
+Most of the text explanation here is taken directly from Jon and Michael's document. I have separated out some bits of code to try to emphasise the structure of the Python code in places. I have added some extensions to make links between Python and R.
 
 ```{python}
+# Python chunk
 # Import the `gemmi` package
 import gemmi
 ```
@@ -140,9 +150,10 @@ Here are a few basic but interesting questions about a protein structure we can 
 Import the structure file:
 
 ```{python}
+# Python chunk
 filename = "pdb_files/4INS.pdb" 
 structure_file = gemmi.read_structure ( filename ) # remember gemmi.whatever?
-print(structure_file) # to delete
+
 
 ```
 
@@ -153,53 +164,68 @@ model = structure_file[0] # there can be more than one model per structure file!
                           # in computer science 0 is the first index, so we are
                           # getting the first (and only) model in the file
 
-print(model) # to delete
-
 ```
 
+------------------------------------------------------------------------
+
 You can see all the attributes and methods available for the model object with:
+
 ```{python}
+# Python chunk
 dir(model)
 ```
 
 You can also click on it in the Environment Pane.
 
-
 One of the methods calculates the molecular weight of the protein:
 
 ```{python}
+# Python chunk
 print ( "This protein weight is", model.calculate_mass(), "Da" )
 ```
 
 Which can be formatted to two decimal places:
+
 ```{python}
+# Python chunk
 print ( "This protein weight is %.2f Da" % model.calculate_mass() )
 ```
+
 Each chain in the model can be accessed by indexing the model object:
 
 ```{python}
+# Python chunk
 print(model[0])
 ```
 
 ```{python}
+# Python chunk
 print(model[1])
 ```
 
 ```{python}
+# Python chunk
 print(model[2])
 ```
 
 ```{python}
+# Python chunk
 print(model[3])
 ```
+
 You can iterate through the chains in the model with a for loop:
 
 ```{python}
+# Python chunk
 for polymer in model :
   print (polymer)
 ```
-You can iterate through the chains and through the residues in the chain with two nested for loops: 
+
+You can iterate through the chains and through the residues in the chain with two nested for loops:
+(long output)
+
 ```{python}
+# Python chunk
 for polymer in model :
   print (polymer)
   for steve in polymer :
@@ -207,12 +233,13 @@ for polymer in model :
 
 ```
 
-A major difference between R and Python is that R uses various braces to indicate blocks of code. The indentation makes the code easier to follow. In Python the indentation is not just for readability, it is part of the syntax. It is the indentation itself which indicates the blocks of code.
 
+A major difference between R and Python is that R uses various braces to indicate blocks of code and indentation makes the code easier to follow. In Python the indentation is not just for readability, it is part of the syntax. It is the indentation itself which indicates the blocks of code.
 
- You can use to nested loops to iterate through the chains and residues and extra and print the chain name and the one letter code for the amino acid:
+You can use two nested loops to iterate through the chains and residues and print the chain name and the one letter code for the amino acid:
 
 ```{python}
+# Python chunk
 for polymer in model :
   sequence = ""
   print (polymer)
@@ -223,12 +250,10 @@ for polymer in model :
 
 The `+=` operator is a short-hand way of writing `sequence = sequence + gemmi.find_tabulated_residue(steve.name).one_letter_code.upper()`. It is a common operator in many programming languages. It grows the string `sequence` by adding the one letter code for the amino acid each time the inner loops executes.
 
-
 We are going to use our new skills for calculating average B-factors for this structure. We will make a crude separation between protein and waters, and we will introduce another loop to go through every atom in every residue. We will rely on the fact that the `find_tabulated_residue()` function does not return a code for monomers/residues that are not amino acids. In that case, we will be using `residue.name` to check if the monomer we are checking is a water molecule.
 
 ```{python}
-import statistics        # we will need to do stats, so we import the module
-
+# Python chunk
 aminoacid_bfactors = [ ] # these are lists where we are going to store the
 rest_bfactors      = [ ] # individual B-factors
 
@@ -239,36 +264,61 @@ for chain in model :
         aminoacid_bfactors.append ( atom.b_iso )
       else :
         rest_bfactors.append ( atom.b_iso )
+```
 
+Hopefully the code is more or less self-explanatory. The key bit in this new part is that we have used the `is_amino_acid()` function to check what type of monomer we're encountering at each step. You might wonder, how do we come up with all those suggestions for wonderful functions that do exactly what we need? Well, have a look at the [docs](https://project-gemmi.github.io/python-api/gemmi.ResidueInfo.html) for the `gemmi` module.
+
+We can now calculate the mean and standard deviation of the B-factors for the protein and the rest of the atoms using Python:
+
+```{python}
+# Python chunk
+import statistics        # we will need to do stats, so we import the module
 print ( "Protein part mean(stdev) : %.2f (%.2f)" % \
       ( statistics.mean ( aminoacid_bfactors ), statistics.stdev ( aminoacid_bfactors ) ))
 print ( "Rest of atoms mean(stdev): %.2f (%.2f)" % \
       ( statistics.mean ( rest_bfactors ), statistics.stdev ( rest_bfactors ) ))
 ```
-Hopefully the code is more or less self-explanatory. The key bit in this new part is that we have used the `is_amino_acid()` function to check what type of monomer we're encountering at each step. You might wonder, how do we come up with all those suggestions for wonderful functions that do exactly what we need? Well, have a look at the [docs](https://project-gemmi.github.io/python-api/gemmi.ResidueInfo.html) for the `gemmi` module.
 
+------------------------------------------------------------------------
+
+You can access the lists from R by using the `py$` operator and assign them to vectors:
+
+```{r}
+# R chunk
+aminoacid_bf <- py$aminoacid_bfactors
+rest_bf <- py$rest_bfactors
+```
+
+And calculate the mean and standard deviation in R:
+
+```{r}
+# R chunk
+mean(aminoacid_bf) |> round(2)
+sd(aminoacid_bf) |> round(2)
+mean(rest_bf) |> round(2)
+sd(rest_bf) |> round(2)
+
+```
+
+------------------------------------------------------------------------
 
 At this point you might be starting to want to wonder how to relate the notion of 'Class' to the names we have been using here so far. We will try to explain this as easy as possible.
 
-We define a variable just by naming it, for example `aminoacid_bfactors` is a list because we have assigned `[ ]` – an empty list – to it in `aminoacid_bfactors = [ ]`.
-
+We define a variable just by naming it, for example `aminoacid_bfactors` is a list because we have assigned `[ ]` -- an empty list -- to it in `aminoacid_bfactors = [ ]`.
 
 Other variables are assigned whatever functions return, such as s`tructure_file = gemmi.read_structure ( filename )` earlier in the notebook. `gemmi.read_structure()` returns a Structure class, as it says on the documentation for that function.
 
-
 Once you've got a variable of the `Structure` class, you can start invoking the functions that come with it.
 
-
-🔨   Have a deep dive into the docs, see what functions are available and think about potential uses for them. Discuss those ideas with your neighbours and tell us about them! 😃
-
+🔨 Have a deep dive into the docs, see what functions are available and think about potential uses for them. Discuss those ideas with your neighbours and tell us about them! 😃
 
 ```{python}
+# Python chunk
 # we do not need to import gemmi or statistics again because the notebook
 # remembers the previous block where we have imported the module and
 # read the structure file
 
 from matplotlib import pyplot as plt
-
 
 for chain in model :
 
@@ -301,8 +351,8 @@ for chain in model :
              fontsize = 15,
              fontweight = "bold" )
 
-  plt.plot ( residue_numbers, main_chain_bfactors, "r--", label="main chain")
-  plt.bar ( residue_numbers, side_chain_bfactors, alpha=0.4, label="side chain" )
+  plt.plot ( residue_numbers, main_chain_bfactors, "g--", label="main chain")
+  plt.bar ( residue_numbers, side_chain_bfactors, alpha=0.1, label="side chain" )
 
   plt.xlabel ( "Residue" )
   plt.ylabel ( "Isotropic B-factor" )
@@ -316,15 +366,90 @@ for chain in model :
 
 The code above looks complicated, but it's just an extension of what we had done previously, plus a bit of code at the end for plotting the B-factors. This last bit of code uses matplotlib, which is great for producing graphs in Python. You could tweak these plots to no end!
 
-🔨   Customise the look of your B-factor plots using this[ really good Colab notebook](https://colab.research.google.com/github/amanchadha/aman-ai/blob/master/matplotlib.ipynb#scrollTo=il1nR5kXSmQ9) on the use of matplotlib as a reference. If you get stuck, ask one of us for help 🙂
+🔨 Customise the look of your B-factor plots using this[really good Colab notebook](https://colab.research.google.com/github/amanchadha/aman-ai/blob/master/matplotlib.ipynb#scrollTo=il1nR5kXSmQ9) on the use of matplotlib as a reference. If you get stuck, ask one of us for help 🙂
 
-💡   One potential improvement of these plots would be to draw a horizontal line where the Wilson B is. You can find out its value on the PDB validation report, and you will learn how to draw horizontal lines in the next example anyway.
+💡 One potential improvement of these plots would be to draw a horizontal line where the Wilson B is. You can find out its value on the PDB validation report, and you will learn how to draw horizontal lines in the next example anyway.
+
+------------------------------------------------------------------------
+
+### Extension: Plotting B-factors in R
+
+Get the data using Python.
+
+This requires a change to loop structure to store the data for all chains in lists.
+In the Python code the plotting is done inside the loop, so that the data structures only contain the data from the last chain. We want all the data for all chains, so we need to move list initialisation outside the loop.
+
+```{python}
+# Python chunk
+main_chain_bfactors = [ ] # we will store per residue averages here
+side_chain_bfactors = [ ]
+residue_numbers     = [ ] # residue 1 could be reside 42 according to UniProt
+chain_names         = [ ]
+
+for chain in model :
+
+  for monomer in chain : # we'll call it monomer this time (name doesn't matter)
+    
+    monomer_main_bfactor = [ ] # one for main-chains, one for side-chains
+    monomer_side_bfactor = [ ]
+    if gemmi.find_tabulated_residue(monomer.name).is_amino_acid() :
+      # we only want per-residue information on amino acids
+      residue_numbers.append ( int(monomer.seqid.num) )
+      chain_names.append ( chain.name )
+      for atom in monomer : # EDIT HERE! You can find the answers with Moorhen.
+        if ( atom.name == "CA" or atom.name == "C" or
+              atom.name == "N" or atom.name == "O" ) :
+          monomer_main_bfactor.append ( atom.b_iso ) # clue: main chain atoms
+        else :
+          monomer_side_bfactor.append ( atom.b_iso )
+
+      main_chain_bfactors.append ( statistics.mean ( monomer_main_bfactor ) )
+      if len ( monomer_side_bfactor ) > 0 :
+        side_chain_bfactors.append ( statistics.mean ( monomer_side_bfactor ) )
+      else :
+        side_chain_bfactors.append ( 0.0 ) # special case for glycine
+
+
+```
+
+Copy the Python list objects into an R dataframe
+
+```{r}
+# R chunk
+data <- data.frame(main_chain_bfactors = py$main_chain_bfactors,
+                   side_chain_bfactors = py$side_chain_bfactors,
+                   residue_numbers = py$residue_numbers,
+                   chain_names = paste("Chain", py$chain_names))
+```
+
+Plot with `ggplot`
+
+```{r}
+# R chunk
+library(ggplot2)
+ggplot(data)  +
+  geom_col(aes(x = residue_numbers, 
+                 y = side_chain_bfactors), 
+           fill = "lightblue" ) +
+  geom_line(aes(x = residue_numbers, 
+                y = main_chain_bfactors), 
+            color = "seagreen",
+            linetype = "dashed", linewidth = 1) +
+  facet_wrap(~chain_names, ncol = 2, scales = "free") +
+  scale_x_continuous(name = "Residue") +
+  scale_y_continuous(name = "Isotropic B-factor") +
+  theme_bw()
+
+```
+
+------------------------------------------------------------------------
 
 And on the subject of customisation, it would be great if we could do the same for AlphaFold models. We know that AlphaFold stores its pLDDT in the B-factor column, so perhaps it's doable with very little effort?
 
-🔨   Run the following code to get a nice plot for an AlphaFold prediction for human Lysozyme (UniProt ID A0A080YUZ9). This time we will be getting an AlphaFold model from the database, and we will use Python's wget module for that. We used the wget command at the start of the workshop (scroll up and have a look) and now we are going to demonstrate how we can use it directly from Python. But before that, we need to install it using dear old pip
+🔨 Run the following code to get a nice plot for an AlphaFold prediction for human Lysozyme (UniProt ID A0A080YUZ9). This time we will be getting an AlphaFold model from the database, and we will use Python's wget module for that. We used the wget command at the start of the workshop (scroll up and have a look) and now we are going to demonstrate how we can use it directly from Python. But before that, we need to install it using dear old pip
 
 ```{python}
+# Python chunk
 # we do not need to import gemmi or statistics again because the notebook
 # remembers the previous block where we have imported the module and
 # read the structure file
@@ -363,22 +488,18 @@ plt.legend ( )
 plt.show ( )
 ```
 
-
 The code is actually simpler than what we had for the main and side chain B-factor averages. This time we only care about per residue numbers. We have added a number of horizontal lines coloured according to the [AlphaFold database entry](https://www.alphafold.ebi.ac.uk/entry/A0A080YUZ9) so you can see where pLDDT gets too dodgy.
 
+🔨 Go to the [AlphaFold database entry](https://www.alphafold.ebi.ac.uk/entry/A0A080YUZ9) page and compare your results with the available graphics, including the Predicted Aligned Error (PAE). What is going on with the N-terminus? Discuss.
 
-🔨   Go to the [AlphaFold database entry](https://www.alphafold.ebi.ac.uk/entry/A0A080YUZ9) page and compare your results with the available graphics, including the Predicted Aligned Error (PAE). What is going on with the N-terminus? Discuss.
-
-
-💡   Remember what we said about AlphaFold not doing post-translational modifications? That includes the ever-present disulphide bonds. The structure we are looking at is a Lysozyme, which as you will remember from past workshops, relies on disulphide bonds to form the final fold. Wouldn't it be great if we could check if, despite not being formally linked in the PDB/mmCIF file, the cysteines in this AlphaFold model are consistent with the presence of disulphide bonds?
-
+💡 Remember what we said about AlphaFold not doing post-translational modifications? That includes the ever-present disulphide bonds. The structure we are looking at is a Lysozyme, which as you will remember from past workshops, relies on disulphide bonds to form the final fold. Wouldn't it be great if we could check if, despite not being formally linked in the PDB/mmCIF file, the cysteines in this AlphaFold model are consistent with the presence of disulphide bonds?
 
 Here is some new code that checks for that.
 
-🔨   You'll have to complete it though!
-
+🔨 You'll have to complete it though!
 
 ```{python}
+# Python chunk
 # we do not need to import gemmi or statistics again because the notebook
 # remembers the previous block where we have imported the module and
 # read the structure file
@@ -407,19 +528,18 @@ for chain in model : # just one chain with non-multimer AlphaFold
 
 In this bit of code we are finding cysteines in a protein's sequence with `gemmi.Selection()`, then searching for neighbours within a cut-off distance (your pick) from the position of their sulphur atoms (which you'll need to identify using Moorhen or other tools), and then reporting the ones that don't include atoms from the original cysteine, as the search is atom-based.
 
-🔨   Check that your code does what it's supposed to be doing. Use Moorhen to download A0A080YUZ9 and go to the positions reported by your code, check that the cysteines are within sensible bonding distance and in the expected orientation.
+🔨 Check that your code does what it's supposed to be doing. Use Moorhen to download A0A080YUZ9 and go to the positions reported by your code, check that the cysteines are within sensible bonding distance and in the expected orientation.
 
-
-💡   You probably have spotted that the code reports every potential pair of cysteines twice. That's one thing you could try to address if you were looking to improve this code!
-
+💡 You probably have spotted that the code reports every potential pair of cysteines twice. That's one thing you could try to address if you were looking to improve this code!
 
 ## Bonus: calculation of torsion angles
 
-Here is one more bit of code for you to play with if you have finished all the previous steps and still want to learn more. We will calculate the three torsion angles involved in the formation of the protein backbone for a high resolution crystallographic structure – a monomer of thaumatin at 0.9 angstroems – plotting omega (should be close to planar) and phi,psi (ramachandran angles) separately.
+Here is one more bit of code for you to play with if you have finished all the previous steps and still want to learn more. We will calculate the three torsion angles involved in the formation of the protein backbone for a high resolution crystallographic structure -- a monomer of thaumatin at 0.9 angstroems -- plotting omega (should be close to planar) and phi,psi (ramachandran angles) separately.
 
-🔨   Lots to customise on these plots: from the appearance of the data to what numbers are represented, all up to you to improve.
+🔨 Lots to customise on these plots: from the appearance of the data to what numbers are represented, all up to you to improve.
 
 ```{python}
+# Python chunk
 # we do not need to import gemmi or statistics again because the notebook
 # remembers the previous block where we have imported the module and
 # read the structure file
@@ -473,11 +593,17 @@ plt.show ( )
 
 ```
 
+------------------------------------------------------------------------
+
+### Getting software information
+
 ```{python}
+# Python chunk
 import session_info
 session_info.show()
 ```
 
 ```{r}
+# R chunk
 devtools::session_info()
 ```
